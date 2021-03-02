@@ -6,6 +6,8 @@ let minusBtn = document["getElementById"]("minus-one")
 
 type countAction = Increment | Decrement
 
+let counter = ref(0)
+
 let removeLastClass = (): unit => {
     let theClass = count["classList"][1]
     count["classList"]["remove"](theClass)
@@ -16,17 +18,9 @@ let addClass = className => {
     count["classList"]["add"](className)
 }
 
-let getCount = () => {
-    let theCount = (count["innerText"]->Js.String2.split(" "))[2]
-    switch theCount->Belt.Int.fromString {
-        | Some(number) => number
-        | None => 0
-    }
-}
-
 let updateClass = (): unit => {
-    let realCount = getCount()
-
+    let realCount = counter.contents
+ 
     if realCount > 0 {
         addClass("count-positive")
     } else if realCount < 0 {
@@ -37,8 +31,8 @@ let updateClass = (): unit => {
 }
 
 let updateCounter = (number: int) => {
-    let newCount = getCount() + number
-    let realCount = newCount == 0 ? "zero" : newCount->Belt.Int.toString
+    counter := counter.contents + number
+    let realCount = counter.contents == 0 ? "zero" : counter.contents->Belt.Int.toString
 
     count["innerText"] = "Count is " ++ realCount
     updateClass()
